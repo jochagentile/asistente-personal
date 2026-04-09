@@ -10,194 +10,237 @@
 <meta name="theme-color" content="#0f0f0f">
 <title>Asistente Personal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0f0f0f;
-  --bg2: #1a1a1a;
-  --bg3: #242424;
-  --border: rgba(255,255,255,0.08);
-  --border2: rgba(255,255,255,0.14);
-  --text: #f0f0f0;
-  --text2: #888;
-  --text3: #555;
-  --accent: #4f9eff;
-  --accent2: #2d7de0;
-  --green: #3ecf8e;
-  --red: #f06060;
-  --amber: #f0a030;
-  --purple: #a78bfa;
-  --r: 10px;
-  --r2: 14px;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#242424;--bg4:#2e2e2e;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--border3:rgba(255,255,255,0.22);
+  --text:#f0f0f0;--text2:#888;--text3:#555;
+  --accent:#4f9eff;--accent2:#2d7de0;
+  --green:#3ecf8e;--red:#f06060;--amber:#f0a030;--purple:#a78bfa;
+  --r:10px;--r2:14px;--r3:18px;
+  --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; overflow: hidden; background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--text); }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--text)}
+.shell{display:flex;flex-direction:column;height:100%;padding-top:var(--safe-top);padding-bottom:var(--safe-bottom)}
+.navbar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 10px;border-bottom:.5px solid var(--border);flex-shrink:0}
+.nav-left{display:flex;align-items:center;gap:10px}
+.nav-title{font-size:17px;font-weight:500;letter-spacing:-.3px}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:background .3s}
+.sync-dot.ok{background:var(--green)}.sync-dot.syncing{background:var(--amber);animation:pulse-dot 1s infinite}
+.sync-dot.err{background:var(--red)}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-time{font-family:'DM Mono',monospace;font-size:13px;color:var(--text2)}
+.nav-cfg{background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:18px;line-height:1;padding:2px}
+.nav-cfg:hover{color:var(--text2)}
+.tabs-bar{display:flex;padding:10px 16px 0;gap:4px;border-bottom:.5px solid var(--border);flex-shrink:0;overflow-x:auto}
+.tabs-bar::-webkit-scrollbar{display:none}
+.tab-btn{padding:7px 13px;border-radius:var(--r) var(--r) 0 0;font-size:13px;font-weight:400;color:var(--text2);background:transparent;border:none;cursor:pointer;transition:color .15s;position:relative;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0}
+.tab-btn.active{color:var(--text)}
+.tab-btn.active::after{content:'';position:absolute;bottom:0;left:8px;right:8px;height:1.5px;background:var(--accent);border-radius:2px 2px 0 0}
+.tab-badge{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--red);color:white;font-size:10px;font-weight:500;margin-left:4px;vertical-align:middle}
+.scroll-area{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:16px}
+.scroll-area::-webkit-scrollbar{display:none}
 
-.shell { display: flex; flex-direction: column; height: 100%; padding-top: var(--safe-top); padding-bottom: var(--safe-bottom); }
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:16px}
+.metric{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:10px 12px}
+.metric-label{font-size:10px;color:var(--text3);margin-bottom:3px;text-transform:uppercase;letter-spacing:.4px}
+.metric-val{font-size:22px;font-weight:300;font-family:'DM Mono',monospace}
+.metric-val.c-blue{color:var(--accent)}.metric-val.c-red{color:var(--red)}.metric-val.c-green{color:var(--green)}
 
-.navbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px 10px; border-bottom: 0.5px solid var(--border); flex-shrink: 0; }
-.nav-title { font-size: 17px; font-weight: 500; letter-spacing: -0.3px; }
-.nav-right { display: flex; align-items: center; gap: 12px; }
-.nav-time { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text2); }
-.nav-cfg { background: transparent; border: none; color: var(--text3); cursor: pointer; font-size: 18px; line-height: 1; padding: 2px; }
-.nav-cfg:hover { color: var(--text2); }
+/* AI BOX */
+.ai-box{background:var(--bg2);border:.5px solid var(--border2);border-radius:var(--r2);padding:12px 14px;margin-bottom:16px}
+.ai-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.ai-row{display:flex;gap:8px;align-items:flex-end}
+.ai-textarea{flex:1;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--r);padding:9px 12px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;resize:none;min-height:52px;max-height:120px;line-height:1.5}
+.ai-textarea:focus{outline:none;border-color:var(--border2)}
+.ai-textarea::placeholder{color:var(--text3)}
+.ai-send{width:44px;height:44px;border-radius:var(--r);background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s,transform .1s}
+.ai-send:active{background:var(--accent2);transform:scale(.95)}
+.ai-send svg{width:18px;height:18px;fill:white}
+.ai-send:disabled{background:var(--bg3);cursor:not-allowed}
+.ai-result{margin-top:10px;font-size:13px;color:var(--green);padding:8px 10px;background:rgba(62,207,142,.08);border-radius:var(--r);border:.5px solid rgba(62,207,142,.2);display:none;line-height:1.5}
+.ai-result.err{color:var(--red);background:rgba(240,96,96,.08);border-color:rgba(240,96,96,.2)}
+.ai-result.show{display:block}
+.ai-nokey{font-size:12px;color:var(--amber);margin-top:8px;display:none}
+.ai-nokey.show{display:block}
 
-.tabs-bar { display: flex; padding: 10px 16px 0; gap: 4px; border-bottom: 0.5px solid var(--border); flex-shrink: 0; }
-.tab-btn { padding: 7px 14px; border-radius: var(--r) var(--r) 0 0; font-size: 13px; font-weight: 400; color: var(--text2); background: transparent; border: none; cursor: pointer; transition: color .15s; position: relative; font-family: 'DM Sans', sans-serif; }
-.tab-btn.active { color: var(--text); }
-.tab-btn.active::after { content: ''; position: absolute; bottom: 0; left: 8px; right: 8px; height: 1.5px; background: var(--accent); border-radius: 2px 2px 0 0; }
-.tab-badge { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: var(--red); color: white; font-size: 10px; font-weight: 500; margin-left: 4px; vertical-align: middle; }
+/* DATETIME PICKER */
+.dt-picker{background:var(--bg2);border:.5px solid var(--border2);border-radius:var(--r2);padding:14px;margin-top:10px;display:none}
+.dt-picker.show{display:block}
+.dt-picker-title{font-size:12px;color:var(--text2);margin-bottom:12px;font-weight:500}
+.dt-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.dt-day-btn{padding:7px 12px;border-radius:var(--r);border:.5px solid var(--border2);background:transparent;color:var(--text2);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap}
+.dt-day-btn:hover,.dt-day-btn.sel{background:var(--accent);border-color:var(--accent);color:white}
+.dt-time-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.dt-time-label{font-size:11px;color:var(--text3)}
+.dt-hour-btn{width:40px;height:34px;border-radius:var(--r);border:.5px solid var(--border2);background:transparent;color:var(--text2);font-size:12px;cursor:pointer;font-family:'DM Mono',monospace;transition:all .15s}
+.dt-hour-btn:hover,.dt-hour-btn.sel{background:var(--accent);border-color:var(--accent);color:white}
+.dt-confirm{width:100%;margin-top:12px;padding:10px;border-radius:var(--r);border:none;background:var(--accent);color:white;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+.dt-confirm:active{background:var(--accent2)}
 
-.scroll-area { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; padding: 16px; }
-.scroll-area::-webkit-scrollbar { display: none; }
+/* SECTION */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.section-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px}
+.btn-add{font-size:12px;padding:5px 12px;border-radius:var(--r);border:.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:color .15s,border-color .15s}
+.btn-add:hover,.btn-add:active{color:var(--text);border-color:var(--text3)}
 
-.metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 16px; }
-.metric { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--r); padding: 10px 12px; }
-.metric-label { font-size: 10px; color: var(--text3); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.4px; }
-.metric-val { font-size: 22px; font-weight: 300; font-family: 'DM Mono', monospace; }
-.metric-val.c-blue { color: var(--accent); }
-.metric-val.c-red { color: var(--red); }
-.metric-val.c-green { color: var(--green); }
+/* PROJECT CARD */
+.proj-card{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r2);padding:14px 16px;margin-bottom:10px;transition:border-color .15s}
+.proj-card:hover{border-color:var(--border2)}
+.proj-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.proj-name{font-size:14px;font-weight:500}
+.proj-actions{display:flex;gap:6px;align-items:center}
+.type-badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:400}
+.type-badge.trabajo{background:rgba(79,158,255,.12);color:var(--accent)}
+.type-badge.personal{background:rgba(167,139,250,.12);color:var(--purple)}
+.proj-desc{font-size:12px;color:var(--text3);margin-bottom:8px}
+.proj-stat{font-size:11px;color:var(--text3);margin-bottom:5px;font-family:'DM Mono',monospace}
+.progress-track{height:2px;background:var(--bg3);border-radius:2px;margin-bottom:10px}
+.progress-fill{height:2px;border-radius:2px;background:var(--accent);transition:width .4s}
 
-.ai-box { background: var(--bg2); border: 0.5px solid var(--border2); border-radius: var(--r2); padding: 12px 14px; margin-bottom: 16px; }
-.ai-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
-.ai-row { display: flex; gap: 8px; align-items: flex-end; }
-.ai-textarea { flex: 1; background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--r); padding: 9px 12px; font-size: 14px; color: var(--text); font-family: 'DM Sans', sans-serif; resize: none; min-height: 52px; max-height: 120px; line-height: 1.5; }
-.ai-textarea:focus { outline: none; border-color: var(--border2); }
-.ai-textarea::placeholder { color: var(--text3); }
-.ai-send { width: 44px; height: 44px; border-radius: var(--r); background: var(--accent); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .15s, transform .1s; }
-.ai-send:active { background: var(--accent2); transform: scale(0.95); }
-.ai-send svg { width: 18px; height: 18px; fill: white; }
-.ai-send:disabled { background: var(--bg3); cursor: not-allowed; }
-.ai-result { margin-top: 10px; font-size: 13px; color: var(--green); padding: 8px 10px; background: rgba(62,207,142,0.08); border-radius: var(--r); border: 0.5px solid rgba(62,207,142,0.2); display: none; line-height: 1.5; }
-.ai-result.err { color: var(--red); background: rgba(240,96,96,0.08); border-color: rgba(240,96,96,0.2); }
-.ai-result.show { display: block; }
-.ai-nokey { font-size: 12px; color: var(--amber); margin-top: 8px; display: none; }
-.ai-nokey.show { display: block; }
+/* TASK ROW */
+.task-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-top:.5px solid var(--border)}
+.task-check{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border2);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s;margin-top:1px}
+.task-check.done{background:var(--green);border-color:var(--green)}
+.task-check.done::after{content:'';width:9px;height:5px;border-left:1.5px solid #0f0f0f;border-bottom:1.5px solid #0f0f0f;transform:rotate(-45deg) translateY(-1px)}
+.task-body{flex:1;min-width:0}
+.task-name{font-size:13px;line-height:1.4}
+.task-name.done{text-decoration:line-through;color:var(--text3)}
+.task-meta-row{display:flex;gap:6px;align-items:center;margin-top:3px;flex-wrap:wrap}
+.task-date{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace}
+.task-date.overdue{color:var(--red)}
+.task-date.soon{color:var(--amber)}
+.pri-dot{width:6px;height:6px;border-radius:50%;background:var(--amber);flex-shrink:0}
+.task-history{font-size:10px;color:var(--text3);font-style:italic}
+.task-actions{display:flex;gap:4px;flex-shrink:0}
+.task-edit-btn{width:22px;height:22px;border-radius:50%;border:none;background:transparent;color:var(--text3);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:color .15s,background .15s}
+.task-edit-btn:hover{color:var(--accent);background:rgba(79,158,255,.1)}
+.del-btn{width:22px;height:22px;border-radius:50%;border:none;background:transparent;color:var(--text3);cursor:pointer;font-size:16px;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:color .15s,background .15s}
+.del-btn:hover{color:var(--red);background:rgba(240,96,96,.1)}
 
-.section-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.section-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.6px; }
-.btn-add { font-size: 12px; padding: 5px 12px; border-radius: var(--r); border: 0.5px solid var(--border2); background: transparent; color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: color .15s, border-color .15s; }
-.btn-add:hover, .btn-add:active { color: var(--text); border-color: var(--text3); }
+/* HISTORY PANEL */
+.history-panel{background:var(--bg3);border-radius:var(--r);padding:10px 12px;margin-top:6px;display:none}
+.history-panel.open{display:block}
+.history-entry{font-size:11px;color:var(--text3);padding:3px 0;border-bottom:.5px solid var(--border);line-height:1.4}
+.history-entry:last-child{border-bottom:none}
+.history-entry .he-date{font-family:'DM Mono',monospace;margin-right:6px;color:var(--text3)}
+.history-entry .he-text{color:var(--text2)}
 
-.proj-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--r2); padding: 14px 16px; margin-bottom: 10px; transition: border-color .15s; }
-.proj-card:hover { border-color: var(--border2); }
-.proj-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-.proj-name { font-size: 14px; font-weight: 500; }
-.proj-actions { display: flex; gap: 6px; align-items: center; }
-.type-badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 400; }
-.type-badge.trabajo { background: rgba(79,158,255,0.12); color: var(--accent); }
-.type-badge.personal { background: rgba(167,139,250,0.12); color: var(--purple); }
-.proj-desc { font-size: 12px; color: var(--text3); margin-bottom: 8px; }
-.proj-stat { font-size: 11px; color: var(--text3); margin-bottom: 5px; font-family: 'DM Mono', monospace; }
-.progress-track { height: 2px; background: var(--bg3); border-radius: 2px; margin-bottom: 10px; }
-.progress-fill { height: 2px; border-radius: 2px; background: var(--accent); transition: width .4s; }
+.loose-card{background:var(--bg2);border:.5px dashed var(--border2);border-radius:var(--r2);padding:12px 16px;margin-bottom:10px}
+.empty-state{text-align:center;padding:32px 20px;color:var(--text3);font-size:13px;line-height:1.8}
+.empty-icon{font-size:28px;margin-bottom:8px;opacity:.4}
 
-.task-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 0.5px solid var(--border); }
-.task-check { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--border2); flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s, border-color .15s; }
-.task-check.done { background: var(--green); border-color: var(--green); }
-.task-check.done::after { content: ''; width: 9px; height: 5px; border-left: 1.5px solid #0f0f0f; border-bottom: 1.5px solid #0f0f0f; transform: rotate(-45deg) translateY(-1px); }
-.task-name { flex: 1; font-size: 13px; line-height: 1.4; }
-.task-name.done { text-decoration: line-through; color: var(--text3); }
-.task-info { display: flex; gap: 6px; align-items: center; }
-.task-date { font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; }
-.pri-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); flex-shrink: 0; }
-.del-btn { width: 22px; height: 22px; border-radius: 50%; border: none; background: transparent; color: var(--text3); cursor: pointer; font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: color .15s, background .15s; }
-.del-btn:hover { color: var(--red); background: rgba(240,96,96,0.1); }
-
-.loose-card { background: var(--bg2); border: 0.5px dashed var(--border2); border-radius: var(--r2); padding: 12px 16px; margin-bottom: 10px; }
-.empty-state { text-align: center; padding: 32px 20px; color: var(--text3); font-size: 13px; line-height: 1.8; }
-.empty-icon { font-size: 28px; margin-bottom: 8px; opacity: 0.4; }
-
-.msg-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--r2); padding: 12px 14px; margin-bottom: 10px; }
-.msg-top { display: flex; gap: 10px; align-items: flex-start; }
-.msg-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; flex-shrink: 0; }
-.msg-icon.gmail { background: rgba(240,96,96,0.15); color: var(--red); }
-.msg-icon.wa { background: rgba(62,207,142,0.12); color: var(--green); }
-.msg-meta { flex: 1; min-width: 0; }
-.msg-title { font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.msg-sub { font-size: 11px; color: var(--text3); margin-top: 2px; font-family: 'DM Mono', monospace; }
-.msg-body-prev { font-size: 12px; color: var(--text2); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.msg-note { font-size: 11px; color: var(--text3); font-style: italic; margin-top: 2px; }
-.msg-foot { display: flex; gap: 6px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
-.status-pill { font-size: 10px; padding: 2px 8px; border-radius: 20px; font-family: 'DM Mono', monospace; }
-.sp-sched { background: rgba(240,160,48,0.12); color: var(--amber); }
-.sp-sent { background: rgba(62,207,142,0.1); color: var(--green); }
-.sp-due { background: rgba(240,96,96,0.1); color: var(--red); }
-.btn-action { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 0.5px solid var(--border2); background: transparent; color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; }
-.btn-action:active { background: var(--bg3); }
+/* MSG CARD */
+.msg-card{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r2);padding:12px 14px;margin-bottom:10px}
+.msg-top{display:flex;gap:10px;align-items:flex-start}
+.msg-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0}
+.msg-icon.gmail{background:rgba(240,96,96,.15);color:var(--red)}
+.msg-icon.wa{background:rgba(62,207,142,.12);color:var(--green)}
+.msg-meta{flex:1;min-width:0}
+.msg-title{font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.msg-sub{font-size:11px;color:var(--text3);margin-top:2px;font-family:'DM Mono',monospace}
+.msg-body-prev{font-size:12px;color:var(--text2);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.msg-note{font-size:11px;color:var(--text3);font-style:italic;margin-top:2px}
+.msg-foot{display:flex;gap:6px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.status-pill{font-size:10px;padding:2px 8px;border-radius:20px;font-family:'DM Mono',monospace}
+.sp-sched{background:rgba(240,160,48,.12);color:var(--amber)}
+.sp-sent{background:rgba(62,207,142,.1);color:var(--green)}
+.sp-due{background:rgba(240,96,96,.1);color:var(--red)}
+.btn-action{font-size:11px;padding:3px 10px;border-radius:20px;border:.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-action:active{background:var(--bg3)}
 
 /* MODALS */
-.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7); backdrop-filter: blur(4px); z-index: 100; align-items: flex-end; justify-content: center; padding-bottom: var(--safe-bottom); }
-.modal-bg.open { display: flex; animation: fadeIn .2s ease; }
-@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
-.modal-sheet { background: var(--bg2); border-radius: 20px 20px 0 0; border: 0.5px solid var(--border2); border-bottom: none; padding: 8px 0 0; width: 100%; max-width: 600px; max-height: 92vh; overflow-y: auto; animation: slideUp .25s ease; }
-@keyframes slideUp { from { transform: translateY(100%) } to { transform: translateY(0) } }
-.sheet-handle { width: 36px; height: 4px; background: var(--border2); border-radius: 2px; margin: 0 auto 16px; }
-.sheet-title { font-size: 16px; font-weight: 500; padding: 0 20px; margin-bottom: 16px; }
-.sheet-body { padding: 0 20px 24px; }
-.field { margin-bottom: 14px; }
-.field-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; display: block; }
-.field-input { width: 100%; background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--r); padding: 10px 12px; font-size: 14px; color: var(--text); font-family: 'DM Sans', sans-serif; }
-.field-input:focus { outline: none; border-color: var(--border2); }
-.field-input::placeholder { color: var(--text3); }
-.field-input option { background: var(--bg2); color: var(--text); }
-.field-textarea { resize: none; min-height: 80px; line-height: 1.5; }
-.sheet-actions { display: flex; gap: 10px; }
-.btn-cancel-sheet { flex: 1; padding: 13px; border-radius: var(--r); border: 0.5px solid var(--border2); background: transparent; color: var(--text2); font-size: 15px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-.btn-save-sheet { flex: 2; padding: 13px; border-radius: var(--r); border: none; background: var(--accent); color: white; font-size: 15px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background .15s; }
-.btn-save-sheet:active { background: var(--accent2); }
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:100;align-items:flex-end;justify-content:center;padding-bottom:var(--safe-bottom)}
+.modal-bg.open{display:flex;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-sheet{background:var(--bg2);border-radius:20px 20px 0 0;border:.5px solid var(--border2);border-bottom:none;padding:8px 0 0;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;animation:slideUp .25s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 16px}
+.sheet-title{font-size:16px;font-weight:500;padding:0 20px;margin-bottom:16px}
+.sheet-body{padding:0 20px 24px}
+.field{margin-bottom:14px}
+.field-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block}
+.field-input{width:100%;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--r);padding:10px 12px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif}
+.field-input:focus{outline:none;border-color:var(--border2)}
+.field-input::placeholder{color:var(--text3)}
+.field-input option{background:var(--bg2);color:var(--text)}
+.field-textarea{resize:none;min-height:80px;line-height:1.5}
+.sheet-actions{display:flex;gap:10px}
+.btn-cancel-sheet{flex:1;padding:13px;border-radius:var(--r);border:.5px solid var(--border2);background:transparent;color:var(--text2);font-size:15px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-save-sheet{flex:2;padding:13px;border-radius:var(--r);border:none;background:var(--accent);color:white;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s}
+.btn-save-sheet:active{background:var(--accent2)}
+.edit-note{font-size:11px;color:var(--text3);font-style:italic;margin-bottom:10px}
 
-/* CONFIG SCREEN */
-.cfg-screen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 300; overflow-y: auto; padding: calc(16px + var(--safe-top)) 20px calc(24px + var(--safe-bottom)); }
-.cfg-screen.open { display: block; }
-.cfg-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
-.cfg-title { font-size: 20px; font-weight: 500; }
-.cfg-close { background: transparent; border: none; color: var(--text2); font-size: 28px; cursor: pointer; line-height: 1; }
-.cfg-section { margin-bottom: 28px; }
-.cfg-section-title { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 12px; }
-.cfg-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--r2); padding: 16px; }
-.cfg-desc { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 14px; }
-.cfg-link { color: var(--accent); text-decoration: none; }
-.cfg-key-row { display: flex; gap: 8px; }
-.cfg-key-input { flex: 1; background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--r); padding: 10px 12px; font-size: 13px; color: var(--text); font-family: 'DM Mono', monospace; }
-.cfg-key-input:focus { outline: none; border-color: var(--border2); }
-.cfg-key-input::placeholder { color: var(--text3); font-size: 12px; }
-.cfg-save { padding: 10px 18px; border-radius: var(--r); border: none; background: var(--accent); color: white; font-size: 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
-.cfg-save:active { background: var(--accent2); }
-.cfg-status { font-size: 12px; margin-top: 10px; }
-.cfg-status.ok { color: var(--green); }
-.cfg-status.err { color: var(--red); }
-.cfg-danger { background: transparent; border: 0.5px solid rgba(240,96,96,0.3); border-radius: var(--r); padding: 11px 16px; width: 100%; color: var(--red); font-size: 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; text-align: left; }
-.cfg-danger:active { background: rgba(240,96,96,0.08); }
+/* ALERT BADGE */
+.alert-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(240,96,96,.1);color:var(--red);margin-top:4px}
+
+/* CONFIG */
+.cfg-screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;overflow-y:auto;padding:calc(16px + var(--safe-top)) 20px calc(24px + var(--safe-bottom))}
+.cfg-screen.open{display:block}
+.cfg-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.cfg-title{font-size:20px;font-weight:500}
+.cfg-close{background:transparent;border:none;color:var(--text2);font-size:28px;cursor:pointer;line-height:1}
+.cfg-section{margin-bottom:24px}
+.cfg-section-title{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px}
+.cfg-card{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r2);padding:16px}
+.cfg-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:14px}
+.cfg-link{color:var(--accent);text-decoration:none}
+.cfg-key-row{display:flex;gap:8px}
+.cfg-key-input{flex:1;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--r);padding:10px 12px;font-size:13px;color:var(--text);font-family:'DM Mono',monospace}
+.cfg-key-input:focus{outline:none;border-color:var(--border2)}
+.cfg-key-input::placeholder{color:var(--text3);font-size:12px}
+.cfg-save{padding:10px 18px;border-radius:var(--r);border:none;background:var(--accent);color:white;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.cfg-save:active{background:var(--accent2)}
+.cfg-status{font-size:12px;margin-top:10px}
+.cfg-status.ok{color:var(--green)}.cfg-status.err{color:var(--red)}
+.cfg-danger{background:transparent;border:.5px solid rgba(240,96,96,.3);border-radius:var(--r);padding:11px 16px;width:100%;color:var(--red);font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:left}
+.cfg-danger:active{background:rgba(240,96,96,.08)}
+.cfg-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:.5px solid var(--border)}
+.cfg-row:last-child{border-bottom:none}
+.cfg-row-label{font-size:13px}
+.cfg-row-sub{font-size:11px;color:var(--text3);margin-top:2px}
 
 /* REMINDER */
-.reminder-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.85); backdrop-filter: blur(8px); z-index: 200; align-items: center; justify-content: center; padding: 24px; padding-top: calc(24px + var(--safe-top)); padding-bottom: calc(24px + var(--safe-bottom)); }
-.reminder-overlay.open { display: flex; animation: fadeIn .25s ease; }
-.reminder-box { background: var(--bg2); border: 1px solid var(--accent); border-radius: 20px; padding: 24px; width: 100%; max-width: 440px; box-shadow: 0 0 60px rgba(79,158,255,0.15); }
-.rem-pulse { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); margin-bottom: 14px; animation: pulse 1.5s infinite; }
-@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(79,158,255,0.4); } 50% { opacity: 0.8; transform: scale(1.1); box-shadow: 0 0 0 6px rgba(79,158,255,0); } }
-.rem-title { font-size: 18px; font-weight: 500; margin-bottom: 4px; }
-.rem-sub { font-size: 13px; color: var(--text2); margin-bottom: 16px; }
-.rem-msg { background: var(--bg3); border: 0.5px solid var(--border2); border-radius: var(--r); padding: 14px; font-size: 15px; line-height: 1.7; margin-bottom: 16px; color: var(--text); user-select: all; }
-.rem-copy { width: 100%; padding: 14px; border-radius: var(--r); border: none; background: var(--accent); color: white; font-size: 15px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-bottom: 8px; transition: background .15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.rem-copy:active { background: var(--accent2); }
-.rem-copy-ok { color: var(--green); font-size: 13px; text-align: center; margin-bottom: 8px; display: none; }
-.rem-footer { display: flex; gap: 8px; }
-.rem-dismiss, .rem-snooze { flex: 1; padding: 12px; border-radius: var(--r); font-size: 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; border: 0.5px solid var(--border2); background: transparent; color: var(--text2); }
-.rem-snooze { color: var(--amber); border-color: rgba(240,160,48,0.3); }
+.reminder-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;padding:24px;padding-top:calc(24px + var(--safe-top));padding-bottom:calc(24px + var(--safe-bottom))}
+.reminder-overlay.open{display:flex;animation:fadeIn .25s ease}
+.reminder-box{background:var(--bg2);border:1px solid var(--accent);border-radius:20px;padding:24px;width:100%;max-width:440px;box-shadow:0 0 60px rgba(79,158,255,.15)}
+.rem-pulse{width:10px;height:10px;border-radius:50%;background:var(--accent);margin-bottom:14px;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);box-shadow:0 0 0 0 rgba(79,158,255,.4)}50%{opacity:.8;transform:scale(1.1);box-shadow:0 0 0 6px rgba(79,158,255,0)}}
+.rem-title{font-size:18px;font-weight:500;margin-bottom:4px}
+.rem-sub{font-size:13px;color:var(--text2);margin-bottom:16px}
+.rem-msg{background:var(--bg3);border:.5px solid var(--border2);border-radius:var(--r);padding:14px;font-size:15px;line-height:1.7;margin-bottom:16px;color:var(--text);user-select:all}
+.rem-copy{width:100%;padding:14px;border-radius:var(--r);border:none;background:var(--accent);color:white;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:8px;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.rem-copy:active{background:var(--accent2)}
+.rem-copy-ok{color:var(--green);font-size:13px;text-align:center;margin-bottom:8px;display:none}
+.rem-footer{display:flex;gap:8px}
+.rem-dismiss,.rem-snooze{flex:1;padding:12px;border-radius:var(--r);font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;border:.5px solid var(--border2);background:transparent;color:var(--text2)}
+.rem-snooze{color:var(--amber);border-color:rgba(240,160,48,.3)}
 
-.spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.2); border-top-color: white; border-radius: 50%; animation: spin .6s linear infinite; display: inline-block; }
-@keyframes spin { to { transform: rotate(360deg); } }
+/* SPINNER */
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* NOTIFICATION BANNER */
+.notif-banner{position:fixed;top:calc(16px + var(--safe-top));left:16px;right:16px;background:var(--bg2);border:1px solid var(--accent);border-radius:var(--r2);padding:14px 16px;z-index:150;display:none;animation:slideDown .3s ease;max-width:500px;margin:0 auto}
+@keyframes slideDown{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.notif-banner.show{display:block}
+.notif-title{font-size:13px;font-weight:500;margin-bottom:2px}
+.notif-body{font-size:12px;color:var(--text2)}
+.notif-close{position:absolute;top:10px;right:12px;background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:18px;line-height:1}
 </style>
 </head>
 <body>
 
 <div class="shell">
   <div class="navbar">
-    <div class="nav-title">Asistente</div>
+    <div class="nav-left">
+      <div class="nav-title">Asistente</div>
+      <div class="sync-dot" id="sync-dot" title="Estado de sincronización"></div>
+    </div>
     <div class="nav-right">
       <div class="nav-time" id="nav-time">--:--</div>
       <button class="nav-cfg" onclick="openCfg()" title="Configuración">⚙</button>
@@ -209,17 +252,23 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); font-family:
     <button class="tab-btn" onclick="switchTab('personal')">Personal</button>
     <button class="tab-btn" onclick="switchTab('mensajes')">Mensajes <span class="tab-badge" id="msg-badge" style="display:none">0</span></button>
   </div>
-  <div class="scroll-area">
-    <div id="main"></div>
-  </div>
+  <div class="scroll-area"><div id="main"></div></div>
 </div>
 
-<!-- MODALES -->
+<!-- NOTIFICATION BANNER -->
+<div class="notif-banner" id="notif-banner">
+  <button class="notif-close" onclick="closeNotifBanner()">×</button>
+  <div class="notif-title" id="notif-title"></div>
+  <div class="notif-body" id="notif-body"></div>
+</div>
+
+<!-- MODALS -->
 <div class="modal-bg" id="proj-modal">
   <div class="modal-sheet">
     <div class="sheet-handle"></div>
-    <div class="sheet-title">Nuevo proyecto</div>
+    <div class="sheet-title" id="proj-modal-title">Nuevo proyecto</div>
     <div class="sheet-body">
+      <input type="hidden" id="f-id">
       <div class="field"><label class="field-label">Nombre</label><input class="field-input" id="f-name" placeholder="Nombre del proyecto"></div>
       <div class="field"><label class="field-label">Tipo</label><select class="field-input" id="f-type"><option value="trabajo">Trabajo</option><option value="personal">Personal</option></select></div>
       <div class="field"><label class="field-label">Descripción (opcional)</label><input class="field-input" id="f-desc" placeholder="Breve descripción"></div>
@@ -234,12 +283,16 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); font-family:
 <div class="modal-bg" id="task-modal">
   <div class="modal-sheet">
     <div class="sheet-handle"></div>
-    <div class="sheet-title">Nueva tarea</div>
+    <div class="sheet-title" id="task-modal-title">Nueva tarea</div>
     <div class="sheet-body">
+      <input type="hidden" id="t-id">
+      <div class="edit-note" id="t-edit-note" style="display:none"></div>
       <div class="field"><label class="field-label">Tarea</label><input class="field-input" id="t-name" placeholder="Descripción de la tarea"></div>
       <div class="field"><label class="field-label">Proyecto</label><select class="field-input" id="t-proj"></select></div>
       <div class="field"><label class="field-label">Fecha límite</label><input class="field-input" type="date" id="t-date"></div>
+      <div class="field"><label class="field-label">Hora de alerta (opcional)</label><input class="field-input" type="time" id="t-alert-time" placeholder="Ej: 09:00"></div>
       <div class="field"><label class="field-label">Prioridad</label><select class="field-input" id="t-pri"><option value="normal">Normal</option><option value="alta">Alta</option><option value="baja">Baja</option></select></div>
+      <div class="field"><label class="field-label">Nota de edición (opcional)</label><input class="field-input" id="t-edit-comment" placeholder="Ej: actualizado tras reunión"></div>
       <div class="sheet-actions">
         <button class="btn-cancel-sheet" onclick="closeModal('task-modal')">Cancelar</button>
         <button class="btn-save-sheet" onclick="saveTask()">Guardar</button>
@@ -303,16 +356,20 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); font-family:
     <div class="cfg-title">Configuración</div>
     <button class="cfg-close" onclick="closeCfg()">×</button>
   </div>
-
+  <div class="cfg-section">
+    <div class="cfg-section-title">Sincronización</div>
+    <div class="cfg-card">
+      <div class="cfg-desc" id="sync-status-text">Conectando a Firebase...</div>
+      <div class="cfg-row">
+        <div><div class="cfg-row-label">Estado</div><div class="cfg-row-sub" id="cfg-sync-status">—</div></div>
+        <div class="sync-dot" id="cfg-sync-dot"></div>
+      </div>
+    </div>
+  </div>
   <div class="cfg-section">
     <div class="cfg-section-title">API de inteligencia artificial</div>
     <div class="cfg-card">
-      <div class="cfg-desc">
-        Para usar el campo de lenguaje natural necesitás una API key de Anthropic. Es gratuita para empezar y muy económica.<br><br>
-        1. Entrá a <a class="cfg-link" href="https://console.anthropic.com" target="_blank">console.anthropic.com</a><br>
-        2. Creá una cuenta → API Keys → Create Key<br>
-        3. Pegá la key acá abajo. Se guarda solo en este dispositivo.
-      </div>
+      <div class="cfg-desc">Key de Anthropic para el campo de lenguaje natural. Conseguila en <a class="cfg-link" href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></div>
       <div class="cfg-key-row">
         <input class="cfg-key-input" id="cfg-key-input" type="password" placeholder="sk-ant-...">
         <button class="cfg-save" onclick="saveApiKey()">Guardar</button>
@@ -320,180 +377,268 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); font-family:
       <div class="cfg-status" id="cfg-key-status"></div>
     </div>
   </div>
-
+  <div class="cfg-section">
+    <div class="cfg-section-title">Notificaciones</div>
+    <div class="cfg-card">
+      <div class="cfg-desc">Activá notificaciones del navegador para recibir alertas aunque la app no esté en pantalla.</div>
+      <button class="cfg-save" onclick="requestNotifPerm()" id="notif-btn">Activar notificaciones</button>
+      <div class="cfg-status" id="notif-status"></div>
+    </div>
+  </div>
   <div class="cfg-section">
     <div class="cfg-section-title">Datos</div>
     <div class="cfg-card">
-      <div class="cfg-desc">Todos los datos se guardan localmente en este dispositivo. No se sincronizan entre dispositivos.</div>
       <button class="cfg-danger" onclick="clearAllData()">Borrar todos los datos</button>
-    </div>
-  </div>
-
-  <div class="cfg-section">
-    <div class="cfg-section-title">Recordatorios</div>
-    <div class="cfg-card">
-      <div class="cfg-desc">Los recordatorios aparecen cuando la app está abierta. El check se hace cada 10 segundos. Mensajes vencidos (hasta 24hs antes) se muestran al abrir la app.</div>
     </div>
   </div>
 </div>
 
-<script>
-const KEY = 'jocha-asistente-v2';
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js';
+
+// ── FIREBASE CONFIG ──────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyC_bXzjxQqhz7F_l42tiwW0BKWR5bTsMtM",
+  authDomain: "asistente-personal-86cdd.firebaseapp.com",
+  projectId: "asistente-personal-86cdd",
+  storageBucket: "asistente-personal-86cdd.firebasestorage.app",
+  messagingSenderId: "166441879942",
+  appId: "1:166441879942:web:be916af9116e7b3e274407"
+};
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+const messaging = getMessaging(fbApp);
+const VAPID_KEY = 'XAAraCKAkremjtkNv8IjIrBuegGM55tJseLWjaDJmGI';
+
+// ── STATE ────────────────────────────────────────────────────────
 const KEY_CFG = 'jocha-cfg-v1';
-let state = { projects: [], tasks: [], messages: [], tab: 'todo' };
 let cfg = { apiKey: '' };
+let projects = {};
+let tasks = {};
+let messages = {};
+let currentTab = 'todo';
 let activeReminder = null;
 let checkInterval = null;
+let notifBannerTimer = null;
 
-function load() {
-  try { const d = localStorage.getItem(KEY); if (d) state = JSON.parse(d); } catch(e) {}
-  try { const c = localStorage.getItem(KEY_CFG); if (c) cfg = JSON.parse(c); } catch(e) {}
-  render();
-  startClock();
-  startCheck();
+try { const c = localStorage.getItem(KEY_CFG); if(c) cfg = JSON.parse(c); } catch(e) {}
+
+// ── SYNC DOT ─────────────────────────────────────────────────────
+function setSyncState(state) {
+  ['sync-dot','cfg-sync-dot'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) { el.className = 'sync-dot ' + state; }
+  });
+  const st = document.getElementById('cfg-sync-status');
+  if(st) st.textContent = state==='ok' ? 'Conectado y sincronizado' : state==='syncing' ? 'Sincronizando...' : 'Sin conexión';
 }
-function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {} }
-function saveCfg() { try { localStorage.setItem(KEY_CFG, JSON.stringify(cfg)); } catch(e) {} }
+setSyncState('syncing');
 
+// ── FIRESTORE LISTENERS ──────────────────────────────────────────
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 
-// Fix timezone: usar hora local como string, no UTC
-function nowLocalStr() {
-  const d = new Date();
-  const pad = n => String(n).padStart(2,'0');
-  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+onSnapshot(collection(db,'projects'), snap => {
+  projects = {};
+  snap.forEach(d => { projects[d.id] = { id: d.id, ...d.data() }; });
+  setSyncState('ok'); render();
+}, () => setSyncState('err'));
+
+onSnapshot(collection(db,'tasks'), snap => {
+  tasks = {};
+  snap.forEach(d => { tasks[d.id] = { id: d.id, ...d.data() }; });
+  render();
+});
+
+onSnapshot(collection(db,'messages'), snap => {
+  messages = {};
+  snap.forEach(d => { messages[d.id] = { id: d.id, ...d.data() }; });
+  updateBadge(); render();
+});
+
+// ── FIRESTORE WRITES ─────────────────────────────────────────────
+async function saveProject(data) {
+  setSyncState('syncing');
+  await setDoc(doc(db,'projects',data.id), data);
+  setSyncState('ok');
 }
-function fmtDate(d) {
-  if(!d) return '';
-  const [y,m,day] = d.split('-');
-  return `${day}/${m}`;
+async function deleteProject(id) {
+  setSyncState('syncing');
+  await deleteDoc(doc(db,'projects',id));
+  Object.values(tasks).filter(t=>t.projectId===id).forEach(t => deleteDoc(doc(db,'tasks',t.id)));
+  setSyncState('ok');
 }
-function fmtDT(d) {
-  if(!d) return '';
-  // d is "YYYY-MM-DDTHH:MM" local time string
-  const [date, time] = d.split('T');
-  const [y,m,day] = date.split('-');
-  return `${day}/${m} ${time||''}`;
+async function saveTask(data) {
+  setSyncState('syncing');
+  await setDoc(doc(db,'tasks',data.id), data);
+  setSyncState('ok');
 }
-// Compare datetime strings directly (both are local "YYYY-MM-DDTHH:MM")
-function dtToMs(d) {
-  if(!d) return 0;
-  return new Date(d).getTime();
+async function deleteTask(id) {
+  setSyncState('syncing');
+  await deleteDoc(doc(db,'tasks',id));
+  setSyncState('ok');
+}
+async function saveMessage(data) {
+  setSyncState('syncing');
+  await setDoc(doc(db,'messages',data.id), data);
+  setSyncState('ok');
+}
+async function deleteMessage(id) {
+  setSyncState('syncing');
+  await deleteDoc(doc(db,'messages',id));
+  setSyncState('ok');
 }
 
+// ── HELPERS ──────────────────────────────────────────────────────
+function nowLocalStr() {
+  const d = new Date(), pad = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function todayStr() { return nowLocalStr().slice(0,10); }
+function fmtDate(d) { if(!d) return ''; const [y,m,day]=d.split('-'); return `${day}/${m}`; }
+function fmtDT(d) { if(!d) return ''; const [date,time]=d.split('T'); const [y,m,day]=date.split('-'); return `${day}/${m} ${time||''}`; }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function dateStatus(dateStr) {
+  if(!dateStr) return '';
+  const today = todayStr();
+  const diff = (new Date(dateStr) - new Date(today)) / 86400000;
+  if(diff < 0) return 'overdue';
+  if(diff <= 2) return 'soon';
+  return '';
+}
+
+// ── CLOCK ────────────────────────────────────────────────────────
 function startClock() {
   const el = document.getElementById('nav-time');
-  function tick() {
-    const d = new Date();
-    el.textContent = d.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
-  }
+  function tick() { el.textContent = new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'}); }
   tick(); setInterval(tick, 1000);
 }
 
-function switchTab(t) {
-  state.tab = t;
-  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', ['todo','trabajo','personal','mensajes'][i]===t));
+// ── TABS ─────────────────────────────────────────────────────────
+window.switchTab = function(t) {
+  currentTab = t;
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active',['todo','trabajo','personal','mensajes'][i]===t));
   render();
 }
 
+// ── RENDER ───────────────────────────────────────────────────────
 function render() {
   updateBadge();
   const c = document.getElementById('main');
-  if (state.tab === 'mensajes') { renderMsgs(c); return; }
-  const projs = state.tab === 'todo' ? state.projects : state.projects.filter(p => p.type === state.tab);
-  const pend = state.tasks.filter(t=>!t.done).length;
-  const todayStr = new Date().toLocaleDateString('es-AR');
-  const doneToday = state.tasks.filter(t=>t.done && t.doneAt && new Date(t.doneAt).toLocaleDateString('es-AR')===todayStr).length;
+  if(currentTab === 'mensajes') { renderMsgs(c); return; }
+  const projList = Object.values(projects);
+  const taskList = Object.values(tasks);
+  const projs = currentTab==='todo' ? projList : projList.filter(p=>p.type===currentTab);
+  const pend = taskList.filter(t=>!t.done).length;
+  const todayS = new Date().toLocaleDateString('es-AR');
+  const doneToday = taskList.filter(t=>t.done && t.doneAt && new Date(t.doneAt).toLocaleDateString('es-AR')===todayS).length;
   const hasKey = !!cfg.apiKey;
 
   let h = `<div class="metrics">
-    <div class="metric"><div class="metric-label">Proyectos</div><div class="metric-val c-blue">${state.projects.length}</div></div>
+    <div class="metric"><div class="metric-label">Proyectos</div><div class="metric-val c-blue">${projList.length}</div></div>
     <div class="metric"><div class="metric-label">Pendientes</div><div class="metric-val c-red">${pend}</div></div>
     <div class="metric"><div class="metric-label">Hoy</div><div class="metric-val c-green">${doneToday}</div></div>
-    <div class="metric"><div class="metric-label">Mensajes</div><div class="metric-val">${state.messages.length}</div></div>
+    <div class="metric"><div class="metric-label">Mensajes</div><div class="metric-val">${Object.keys(messages).length}</div></div>
   </div>`;
 
   h += `<div class="ai-box">
     <div class="ai-label">Agregar con lenguaje natural</div>
     <div class="ai-row">
-      <textarea class="ai-textarea" id="ai-input" placeholder='Ej: "WhatsApp a Gustavo viernes 9hs: Confirmar reunión" · "Llamar a UYEE el jueves — llaves de luz"'></textarea>
+      <textarea class="ai-textarea" id="ai-input" placeholder='Ej: "WhatsApp a Gustavo el viernes a las 9: Confirmar reunión" · "Llamar a UYEE el jueves — llaves"'></textarea>
       <button class="ai-send" id="ai-btn" onclick="processAI()"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg></button>
     </div>
     <div class="ai-result" id="ai-result"></div>
-    ${!hasKey ? `<div class="ai-nokey show">Sin API key — configurala en ⚙ para usar la IA. Podés seguir agregando manualmente.</div>` : ''}
+    <div id="dt-picker" class="dt-picker"></div>
+    ${!hasKey ? `<div class="ai-nokey show">Sin API key — configurala en ⚙</div>` : ''}
   </div>`;
 
   h += `<div class="section-hdr">
     <span class="section-label">Proyectos</span>
     <div style="display:flex;gap:6px">
       <button class="btn-add" onclick="openTaskFree()">+ Tarea</button>
-      <button class="btn-add" onclick="openModal('proj-modal')">+ Proyecto</button>
+      <button class="btn-add" onclick="openProjModal()">+ Proyecto</button>
     </div>
   </div>`;
 
-  if (!projs.length && !state.tasks.filter(t=>!t.projectId).length) {
+  if(!projs.length && !taskList.filter(t=>!t.projectId).length) {
     h += `<div class="empty-state"><div class="empty-icon">○</div>Sin elementos aún.<br>Usá el campo de arriba o los botones.</div>`;
   }
 
   projs.forEach(p => {
-    const tasks = state.tasks.filter(t => t.projectId === p.id);
-    const done = tasks.filter(t => t.done).length;
-    const pct = tasks.length ? Math.round(done/tasks.length*100) : 0;
+    const ptasks = taskList.filter(t=>t.projectId===p.id);
+    const done = ptasks.filter(t=>t.done).length;
+    const pct = ptasks.length ? Math.round(done/ptasks.length*100) : 0;
     h += `<div class="proj-card">
       <div class="proj-top">
         <span class="proj-name">${esc(p.name)}</span>
         <div class="proj-actions">
           <span class="type-badge ${p.type}">${p.type}</span>
           <button class="btn-add" onclick="openTaskModal('${p.id}')">+ Tarea</button>
-          <button class="del-btn" onclick="delProject('${p.id}')">×</button>
+          <button class="task-edit-btn" onclick="openProjModal('${p.id}')" title="Editar">✎</button>
+          <button class="del-btn" onclick="confirmDelProject('${p.id}')">×</button>
         </div>
       </div>
       ${p.desc ? `<div class="proj-desc">${esc(p.desc)}</div>` : ''}
-      <div class="proj-stat">${done}/${tasks.length} tareas · ${pct}%</div>
+      <div class="proj-stat">${done}/${ptasks.length} tareas · ${pct}%</div>
       <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
-      ${tasks.map(t => taskRow(t)).join('')}
+      ${ptasks.map(t => taskRowHtml(t)).join('')}
     </div>`;
   });
 
-  const loose = state.tasks.filter(t => !t.projectId);
-  if (loose.length) {
+  const loose = taskList.filter(t=>!t.projectId);
+  if(loose.length) {
     h += `<div class="loose-card">
-      <div style="font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">Sin proyecto</div>
-      ${loose.map(t => taskRow(t)).join('')}
+      <div style="font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Sin proyecto</div>
+      ${loose.map(t=>taskRowHtml(t)).join('')}
     </div>`;
   }
 
   c.innerHTML = h;
-
-  // Enter en modales inline
-  document.getElementById('ai-input')?.addEventListener('keydown', e => {
-    if(e.key==='Enter' && (e.ctrlKey||e.metaKey)) processAI();
-  });
+  document.getElementById('ai-input')?.addEventListener('keydown', e => { if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)) processAI(); });
 }
 
-function taskRow(t) {
+function taskRowHtml(t) {
+  const ds = dateStatus(t.date);
+  const lastEdit = t.history && t.history.length > 0 ? t.history[t.history.length-1] : null;
   return `<div class="task-row">
     <div class="task-check ${t.done?'done':''}" onclick="toggleTask('${t.id}')"></div>
-    <span class="task-name ${t.done?'done':''}">${esc(t.name)}</span>
-    <div class="task-info">
-      ${t.date ? `<span class="task-date">${fmtDate(t.date)}</span>` : ''}
-      ${t.priority==='alta' ? `<span class="pri-dot" title="Alta prioridad"></span>` : ''}
+    <div class="task-body">
+      <div class="task-name ${t.done?'done':''}">${esc(t.name)}</div>
+      <div class="task-meta-row">
+        ${t.date ? `<span class="task-date ${ds}">${fmtDate(t.date)}${t.alertTime?' ⏰'+t.alertTime:''}</span>` : ''}
+        ${t.priority==='alta' ? `<span class="pri-dot" title="Alta prioridad"></span>` : ''}
+        ${lastEdit ? `<span class="task-history" onclick="toggleHistory('${t.id}')" style="cursor:pointer">↻ ${esc(lastEdit.comment||'editado')}</span>` : ''}
+      </div>
+      <div class="history-panel" id="hist-${t.id}">
+        ${(t.history||[]).map(h=>`<div class="history-entry"><span class="he-date">${fmtDate(h.date)}</span><span class="he-text">${esc(h.comment||'actualizado')}</span></div>`).join('')}
+      </div>
     </div>
-    <button class="del-btn" onclick="delTask('${t.id}')">×</button>
+    <div class="task-actions">
+      <button class="task-edit-btn" onclick="openEditTask('${t.id}')" title="Editar">✎</button>
+      <button class="del-btn" onclick="confirmDelTask('${t.id}')">×</button>
+    </div>
   </div>`;
+}
+
+window.toggleHistory = function(id) {
+  const el = document.getElementById('hist-'+id);
+  if(el) el.classList.toggle('open');
 }
 
 function renderMsgs(c) {
   const nowStr = nowLocalStr();
   let h = `<div class="section-hdr"><span class="section-label">Mensajes programados</span><button class="btn-add" onclick="openMsgModal()">+ Programar</button></div>`;
-  if (!state.messages.length) {
-    h += `<div class="empty-state"><div class="empty-icon">○</div>Sin mensajes programados.<br>Podés programar WhatsApp o email.</div>`;
+  const msgList = Object.values(messages);
+  if(!msgList.length) {
+    h += `<div class="empty-state"><div class="empty-icon">○</div>Sin mensajes programados.</div>`;
   } else {
-    state.messages.forEach(m => {
+    msgList.sort((a,b) => a.when < b.when ? -1 : 1).forEach(m => {
       const overdue = !m.sent && m.when <= nowStr;
       const statusLabel = m.sent ? 'enviado' : overdue ? 'vencido' : 'programado';
       const statusCls = m.sent ? 'sp-sent' : overdue ? 'sp-due' : 'sp-sched';
-      const icon = m.type === 'gmail' ? 'G' : 'W';
+      const icon = m.type==='gmail' ? 'G' : 'W';
       h += `<div class="msg-card">
         <div class="msg-top">
           <div class="msg-icon ${m.type}">${icon}</div>
@@ -508,7 +653,7 @@ function renderMsgs(c) {
           <span class="status-pill ${statusCls}">${statusLabel}</span>
           ${m.type==='whatsapp' ? `<button class="btn-action" onclick="showReminder('${m.id}',true)">Ver mensaje</button>` : ''}
           ${m.type==='gmail'&&!m.sent ? `<button class="btn-action" onclick="copyEmail('${m.id}')">Copiar email</button>` : ''}
-          <button class="del-btn" onclick="delMsg('${m.id}')">×</button>
+          <button class="del-btn" onclick="confirmDelMsg('${m.id}')">×</button>
         </div>
       </div>`;
     });
@@ -518,232 +663,406 @@ function renderMsgs(c) {
 
 function updateBadge() {
   const nowStr = nowLocalStr();
-  const due = state.messages.filter(m => !m.sent && m.when <= nowStr).length;
+  const due = Object.values(messages).filter(m=>!m.sent&&m.when<=nowStr).length;
   const b = document.getElementById('msg-badge');
-  if (b) { b.style.display = due ? '' : 'none'; b.textContent = due; }
+  if(b) { b.style.display = due ? '' : 'none'; b.textContent = due; }
 }
 
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
+// ── MODALS ───────────────────────────────────────────────────────
 function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+window.closeModal = function(id) { document.getElementById(id).classList.remove('open'); }
 
-// Enter para guardar en modales
-function handleEnterSave(e, fn) { if(e.key==='Enter') { e.preventDefault(); fn(); } }
-
-function saveProject() {
-  const name = document.getElementById('f-name').value.trim(); if (!name) return;
-  state.projects.push({ id:uid(), name, type:document.getElementById('f-type').value, desc:document.getElementById('f-desc').value.trim() });
-  document.getElementById('f-name').value = ''; document.getElementById('f-desc').value = '';
-  save(); closeModal('proj-modal'); render();
+window.openProjModal = function(id) {
+  const p = id ? projects[id] : null;
+  document.getElementById('proj-modal-title').textContent = p ? 'Editar proyecto' : 'Nuevo proyecto';
+  document.getElementById('f-id').value = id || '';
+  document.getElementById('f-name').value = p ? p.name : '';
+  document.getElementById('f-type').value = p ? p.type : 'trabajo';
+  document.getElementById('f-desc').value = p ? (p.desc||'') : '';
+  openModal('proj-modal');
+  setTimeout(()=>document.getElementById('f-name').focus(), 300);
 }
-function delProject(id) { if(!confirm('¿Borrar proyecto y sus tareas?')) return; state.projects=state.projects.filter(p=>p.id!==id); state.tasks=state.tasks.filter(t=>t.projectId!==id); save(); render(); }
 
-function openTaskModal(pid) {
+window.saveProject = async function() {
+  const name = document.getElementById('f-name').value.trim(); if(!name) return;
+  const id = document.getElementById('f-id').value || uid();
+  const existing = projects[id];
+  const data = { id, name, type: document.getElementById('f-type').value, desc: document.getElementById('f-desc').value.trim(), createdAt: existing?.createdAt || new Date().toISOString() };
+  await saveProject(data);
+  closeModal('proj-modal');
+}
+
+window.confirmDelProject = function(id) {
+  const p = projects[id]; if(!p) return;
+  const taskCount = Object.values(tasks).filter(t=>t.projectId===id).length;
+  if(!confirm(`¿Borrar "${p.name}"${taskCount ? ` y sus ${taskCount} tareas` : ''}?`)) return;
+  deleteProject(id);
+}
+
+window.openTaskModal = function(projectId) {
+  document.getElementById('task-modal-title').textContent = 'Nueva tarea';
+  document.getElementById('t-id').value = '';
+  document.getElementById('t-name').value = '';
+  document.getElementById('t-date').value = '';
+  document.getElementById('t-alert-time').value = '';
+  document.getElementById('t-edit-comment').value = '';
+  document.getElementById('t-edit-note').style.display = 'none';
   const sel = document.getElementById('t-proj');
-  sel.innerHTML = `<option value="">Sin proyecto</option>` + state.projects.map(p=>`<option value="${p.id}" ${p.id===pid?'selected':''}>${esc(p.name)}</option>`).join('');
+  sel.innerHTML = `<option value="">Sin proyecto</option>` + Object.values(projects).map(p=>`<option value="${p.id}" ${p.id===projectId?'selected':''}>${esc(p.name)}</option>`).join('');
   openModal('task-modal');
   setTimeout(()=>document.getElementById('t-name').focus(), 300);
 }
-function openTaskFree() { openTaskModal(null); }
-function saveTask() {
-  const name = document.getElementById('t-name').value.trim(); if (!name) return;
-  state.tasks.push({ id:uid(), name, projectId:document.getElementById('t-proj').value||null, date:document.getElementById('t-date').value, priority:document.getElementById('t-pri').value, done:false });
-  document.getElementById('t-name').value = ''; document.getElementById('t-date').value = '';
-  save(); closeModal('task-modal'); render();
-}
-function toggleTask(id) { const t=state.tasks.find(t=>t.id===id); if(!t)return; t.done=!t.done; t.doneAt=t.done?new Date().toISOString():null; save(); render(); }
-function delTask(id) { state.tasks=state.tasks.filter(t=>t.id!==id); save(); render(); }
+window.openTaskFree = function() { openTaskModal(null); }
 
-function openMsgModal() {
-  document.getElementById('msg-when').value = nowLocalStr().slice(0,16);
-  // Set default 30 min ahead
+window.openEditTask = function(id) {
+  const t = tasks[id]; if(!t) return;
+  document.getElementById('task-modal-title').textContent = 'Editar tarea';
+  document.getElementById('t-id').value = id;
+  document.getElementById('t-name').value = t.name || '';
+  document.getElementById('t-date').value = t.date || '';
+  document.getElementById('t-alert-time').value = t.alertTime || '';
+  document.getElementById('t-edit-comment').value = '';
+  const note = document.getElementById('t-edit-note');
+  if(t.history && t.history.length) {
+    note.textContent = `Última edición: ${fmtDate(t.history[t.history.length-1].date)} — ${t.history[t.history.length-1].comment||'actualizado'}`;
+    note.style.display = 'block';
+  } else { note.style.display = 'none'; }
+  const sel = document.getElementById('t-proj');
+  sel.innerHTML = `<option value="">Sin proyecto</option>` + Object.values(projects).map(p=>`<option value="${p.id}" ${p.id===t.projectId?'selected':''}>${esc(p.name)}</option>`).join('');
+  document.getElementById('t-pri').value = t.priority || 'normal';
+  openModal('task-modal');
+  setTimeout(()=>document.getElementById('t-name').focus(), 300);
+}
+
+window.saveTask = async function() {
+  const name = document.getElementById('t-name').value.trim(); if(!name) return;
+  const id = document.getElementById('t-id').value || uid();
+  const existing = tasks[id];
+  const comment = document.getElementById('t-edit-comment').value.trim();
+  const history = existing?.history || [];
+  if(existing && (existing.name !== name || existing.date !== document.getElementById('t-date').value)) {
+    history.push({ date: todayStr(), comment: comment || 'actualizado' });
+  }
+  const data = {
+    id, name,
+    projectId: document.getElementById('t-proj').value || null,
+    date: document.getElementById('t-date').value,
+    alertTime: document.getElementById('t-alert-time').value,
+    priority: document.getElementById('t-pri').value,
+    done: existing?.done || false,
+    doneAt: existing?.doneAt || null,
+    createdAt: existing?.createdAt || new Date().toISOString(),
+    history
+  };
+  await saveTask(data);
+  closeModal('task-modal');
+}
+
+window.toggleTask = async function(id) {
+  const t = tasks[id]; if(!t) return;
+  const data = { ...t, done: !t.done, doneAt: !t.done ? new Date().toISOString() : null };
+  await saveTask(data);
+}
+
+window.confirmDelTask = function(id) {
+  const t = tasks[id]; if(!t) return;
+  if(!confirm(`¿Borrar "${t.name}"?`)) return;
+  deleteTask(id);
+}
+
+window.openMsgModal = function() {
   const d = new Date(); d.setMinutes(d.getMinutes()+30);
   const pad = n=>String(n).padStart(2,'0');
   document.getElementById('msg-when').value = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
   openModal('msg-modal');
 }
-function toggleMsgType() {
+window.toggleMsgType = function() {
   const t = document.getElementById('msg-type').value;
   document.getElementById('wa-f').style.display = t==='whatsapp' ? '' : 'none';
   document.getElementById('gmail-f').style.display = t==='gmail' ? '' : 'none';
 }
-function saveMsg() {
+window.saveMsg = async function() {
   const type = document.getElementById('msg-type').value;
   const body = document.getElementById('msg-body').value.trim();
   const when = document.getElementById('msg-when').value;
-  if (!body || !when) { alert('Completá el mensaje y la fecha/hora.'); return; }
+  if(!body||!when) { alert('Completá el mensaje y la fecha/hora.'); return; }
   const m = { id:uid(), type, body, when, note:document.getElementById('msg-note').value.trim(), sent:false };
-  if (type==='gmail') { m.to=document.getElementById('msg-to').value.trim(); m.subject=document.getElementById('msg-subj').value.trim(); }
+  if(type==='gmail') { m.to=document.getElementById('msg-to').value.trim(); m.subject=document.getElementById('msg-subj').value.trim(); }
   else { m.phone=document.getElementById('msg-phone').value.trim(); }
-  state.messages.push(m);
+  await saveMessage(m);
   ['msg-to','msg-subj','msg-body','msg-phone','msg-note'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});
-  save(); closeModal('msg-modal'); render();
+  closeModal('msg-modal');
 }
-function delMsg(id) { state.messages=state.messages.filter(m=>m.id!==id); save(); render(); }
+window.confirmDelMsg = function(id) {
+  if(!confirm('¿Borrar este mensaje programado?')) return;
+  deleteMessage(id);
+}
 
-function copyEmail(id) {
-  const m = state.messages.find(x=>x.id===id); if(!m) return;
+window.copyEmail = function(id) {
+  const m = messages[id]; if(!m) return;
   const txt = `Para: ${m.to}\nAsunto: ${m.subject}\n\n${m.body}`;
-  navigator.clipboard.writeText(txt)
-    .then(()=>alert('Contenido del email copiado.\nAbrí Gmail, creá un correo nuevo y pegá.'))
-    .catch(()=>{ prompt('Copiá este texto:', txt); });
+  navigator.clipboard.writeText(txt).then(()=>alert('Copiado. Abrí Gmail y pegá.')).catch(()=>prompt('Copiá este texto:',txt));
 }
 
-function showReminder(id, manual) {
-  const m = state.messages.find(x=>x.id===id); if(!m) return;
+// ── REMINDER ─────────────────────────────────────────────────────
+window.showReminder = function(id, manual) {
+  const m = messages[id]; if(!m) return;
   activeReminder = m;
-  const isWA = m.type === 'whatsapp';
+  const isWA = m.type==='whatsapp';
   document.getElementById('rem-title').textContent = isWA ? 'Recordatorio WhatsApp' : 'Recordatorio email';
-  const sub = (isWA ? (m.phone||'') : `${m.to||''} · ${m.subject||''}`) + (m.note ? ` · ${m.note}` : '') + (!manual ? ` · ${fmtDT(m.when)}` : '');
-  document.getElementById('rem-sub').textContent = sub;
+  document.getElementById('rem-sub').textContent = (isWA ? m.phone : `${m.to||''} · ${m.subject||''}`) + (m.note ? ` · ${m.note}` : '') + (!manual ? ` · ${fmtDT(m.when)}` : '');
   document.getElementById('rem-msg').textContent = m.body || '';
   document.getElementById('rem-copy-ok').style.display = 'none';
   document.getElementById('reminder-overlay').classList.add('open');
-  if (!manual) { m.sent = true; save(); updateBadge(); }
+  if(!manual) { saveMessage({ ...m, sent:true }); }
 }
-
-function copyReminder() {
-  if (!activeReminder) return;
-  navigator.clipboard.writeText(activeReminder.body||'')
-    .then(()=>{
-      const el = document.getElementById('rem-copy-ok');
-      el.textContent = 'Copiado — abrí WhatsApp y pegá';
-      el.style.display = 'block';
-      setTimeout(()=>el.style.display='none', 3500);
-    })
-    .catch(()=>{
-      // Fallback: select text
-      const el = document.getElementById('rem-msg');
-      const r = document.createRange(); r.selectNodeContents(el);
-      window.getSelection().removeAllRanges(); window.getSelection().addRange(r);
-      const ok = document.getElementById('rem-copy-ok');
-      ok.textContent = 'Texto seleccionado — copiá con ⌘C o Ctrl+C';
-      ok.style.display = 'block';
-    });
+window.copyReminder = function() {
+  if(!activeReminder) return;
+  navigator.clipboard.writeText(activeReminder.body||'').then(()=>{
+    const el = document.getElementById('rem-copy-ok'); el.style.display='block';
+    setTimeout(()=>el.style.display='none', 3500);
+  }).catch(()=>{
+    const el = document.getElementById('rem-msg');
+    const r = document.createRange(); r.selectNodeContents(el);
+    window.getSelection().removeAllRanges(); window.getSelection().addRange(r);
+    document.getElementById('rem-copy-ok').textContent='Seleccionado — copiá con ⌘C o Ctrl+C';
+    document.getElementById('rem-copy-ok').style.display='block';
+  });
 }
-function dismissReminder() { document.getElementById('reminder-overlay').classList.remove('open'); activeReminder=null; render(); }
-function snoozeReminder() {
-  if (!activeReminder) return;
-  const m = state.messages.find(x=>x.id===activeReminder.id);
-  if (m) {
+window.dismissReminder = function() { document.getElementById('reminder-overlay').classList.remove('open'); activeReminder=null; }
+window.snoozeReminder = function() {
+  if(!activeReminder) return;
+  const m = messages[activeReminder.id];
+  if(m) {
     const d = new Date(m.when); d.setMinutes(d.getMinutes()+15);
     const pad = n=>String(n).padStart(2,'0');
-    m.when = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-    m.sent = false; save();
+    saveMessage({ ...m, when:`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`, sent:false });
   }
-  document.getElementById('reminder-overlay').classList.remove('open'); activeReminder=null; render();
+  document.getElementById('reminder-overlay').classList.remove('open'); activeReminder=null;
 }
 
-// FIX: ventana de 24hs — muestra cualquier mensaje vencido en las últimas 24hs no descartado
-function startCheck() {
-  if (checkInterval) clearInterval(checkInterval);
-
-  // Check inmediato al abrir (para mensajes vencidos)
-  checkDue();
-  checkInterval = setInterval(checkDue, 10000);
-}
-
+// ── ALERT CHECK ──────────────────────────────────────────────────
 function checkDue() {
-  if (document.getElementById('reminder-overlay').classList.contains('open')) return;
-  if (document.getElementById('cfg-screen').classList.contains('open')) return;
+  if(document.getElementById('reminder-overlay').classList.contains('open')) return;
+  if(document.getElementById('cfg-screen').classList.contains('open')) return;
   const nowStr = nowLocalStr();
-  // Mostrar mensajes vencidos en las últimas 24hs que no fueron descartados
   const cutoff = new Date(); cutoff.setHours(cutoff.getHours()-24);
   const pad = n=>String(n).padStart(2,'0');
   const cutoffStr = `${cutoff.getFullYear()}-${pad(cutoff.getMonth()+1)}-${pad(cutoff.getDate())}T${pad(cutoff.getHours())}:${pad(cutoff.getMinutes())}`;
-  const due = state.messages.find(m => !m.sent && m.when <= nowStr && m.when >= cutoffStr);
-  if (due) showReminder(due.id, false);
+  // Check messages
+  const dueMsg = Object.values(messages).find(m=>!m.sent&&m.when<=nowStr&&m.when>=cutoffStr);
+  if(dueMsg) { showReminder(dueMsg.id, false); return; }
+  // Check task alerts
+  const nowTime = new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+  const today = todayStr();
+  const dueTask = Object.values(tasks).find(t=>!t.done&&t.date===today&&t.alertTime&&t.alertTime===nowTime&&!t.alerted);
+  if(dueTask) {
+    showNotifBanner(`Tarea: ${dueTask.name}`, dueTask.date ? `Vence hoy` : '');
+    saveTask({ ...dueTask, alerted:true });
+    // Browser notification
+    if(Notification.permission==='granted') {
+      new Notification('Asistente — Alerta de tarea', { body: dueTask.name, icon: '/favicon.ico' });
+    }
+  }
 }
 
-// CONFIG
-function openCfg() {
+function showNotifBanner(title, body) {
+  document.getElementById('notif-title').textContent = title;
+  document.getElementById('notif-body').textContent = body;
+  const b = document.getElementById('notif-banner');
+  b.classList.add('show');
+  if(notifBannerTimer) clearTimeout(notifBannerTimer);
+  notifBannerTimer = setTimeout(()=>b.classList.remove('show'), 6000);
+}
+window.closeNotifBanner = function() { document.getElementById('notif-banner').classList.remove('show'); }
+
+// ── NOTIFICATIONS ─────────────────────────────────────────────────
+window.requestNotifPerm = async function() {
+  const st = document.getElementById('notif-status');
+  const btn = document.getElementById('notif-btn');
+  if(!('Notification' in window)) { st.textContent='Tu navegador no soporta notificaciones.'; st.className='cfg-status err'; return; }
+  const perm = await Notification.requestPermission();
+  if(perm!=='granted') { st.textContent='Permiso denegado. Habilitalo en la configuración del navegador.'; st.className='cfg-status err'; return; }
+  try {
+    if('serviceWorker' in navigator) {
+      const reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      const token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: reg });
+      if(token) {
+        try { localStorage.setItem('fcm-token', token); } catch(e) {}
+        st.textContent='Notificaciones push activadas.'; st.className='cfg-status ok'; btn.textContent='Activadas ✓';
+        onMessage(messaging, payload => {
+          showNotifBanner(payload.notification?.title || 'Recordatorio', payload.notification?.body || '');
+        });
+      }
+    } else {
+      st.textContent='Notificaciones básicas activadas (sin segundo plano).'; st.className='cfg-status ok'; btn.textContent='Activadas ✓';
+    }
+  } catch(e) {
+    st.textContent='Notificaciones básicas activadas.'; st.className='cfg-status ok'; btn.textContent='Activadas ✓';
+    console.log('FCM error (non-critical):', e.message);
+  }
+}
+
+// ── CONFIG ───────────────────────────────────────────────────────
+window.openCfg = function() {
   document.getElementById('cfg-key-input').value = cfg.apiKey || '';
   document.getElementById('cfg-key-status').textContent = cfg.apiKey ? 'API key guardada.' : '';
   document.getElementById('cfg-key-status').className = 'cfg-status ok';
+  if(Notification.permission==='granted') {
+    document.getElementById('notif-btn').textContent='Activadas ✓';
+    document.getElementById('notif-status').textContent='Notificaciones activas.';
+    document.getElementById('notif-status').className='cfg-status ok';
+  }
   document.getElementById('cfg-screen').classList.add('open');
 }
-function closeCfg() { document.getElementById('cfg-screen').classList.remove('open'); render(); }
-function saveApiKey() {
+window.closeCfg = function() { document.getElementById('cfg-screen').classList.remove('open'); render(); }
+window.saveApiKey = function() {
   const key = document.getElementById('cfg-key-input').value.trim();
   const st = document.getElementById('cfg-key-status');
-  if (!key) { st.textContent = 'Ingresá una API key válida.'; st.className='cfg-status err'; return; }
-  if (!key.startsWith('sk-ant-')) { st.textContent = 'La key debe empezar con sk-ant-'; st.className='cfg-status err'; return; }
-  cfg.apiKey = key; saveCfg();
-  st.textContent = 'Guardada correctamente.'; st.className='cfg-status ok';
+  if(!key) { st.textContent='Ingresá una API key válida.'; st.className='cfg-status err'; return; }
+  if(!key.startsWith('sk-ant-')) { st.textContent='La key debe empezar con sk-ant-'; st.className='cfg-status err'; return; }
+  cfg.apiKey = key;
+  try { localStorage.setItem(KEY_CFG, JSON.stringify(cfg)); } catch(e) {}
+  st.textContent='Guardada correctamente.'; st.className='cfg-status ok';
 }
-function clearAllData() {
-  if (!confirm('¿Borrar TODOS los proyectos, tareas y mensajes? Esta acción no se puede deshacer.')) return;
-  state = { projects:[], tasks:[], messages:[], tab:'todo' };
-  save(); closeCfg(); render();
+window.clearAllData = async function() {
+  if(!confirm('¿Borrar TODOS los datos? Esta acción no se puede deshacer.')) return;
+  const batch = [...Object.keys(projects).map(id=>deleteDoc(doc(db,'projects',id))),
+    ...Object.keys(tasks).map(id=>deleteDoc(doc(db,'tasks',id))),
+    ...Object.keys(messages).map(id=>deleteDoc(doc(db,'messages',id)))];
+  await Promise.all(batch);
+  closeCfg();
 }
 
-// AI
-async function processAI() {
-  const input = document.getElementById('ai-input')?.value.trim(); if (!input) return;
-  if (!cfg.apiKey) {
+// ── AI ────────────────────────────────────────────────────────────
+let pendingAIResult = null;
+
+window.processAI = async function() {
+  const input = document.getElementById('ai-input')?.value.trim(); if(!input) return;
+  if(!cfg.apiKey) {
     const res = document.getElementById('ai-result');
-    res.className='ai-result err show';
-    res.textContent='Configurá tu API key en ⚙ para usar la IA.';
-    return;
+    res.className='ai-result err show'; res.textContent='Configurá tu API key en ⚙'; return;
   }
-  const btn = document.getElementById('ai-btn'); if (!btn) return;
-  btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>';
+  const btn = document.getElementById('ai-btn'); if(!btn) return;
+  btn.disabled=true; btn.innerHTML='<div class="spinner"></div>';
   const res = document.getElementById('ai-result'); res.className='ai-result show'; res.textContent='Procesando...';
 
-  const projList = state.projects.map(p=>`- ${p.name} (${p.type}, id:${p.id})`).join('\n') || '(ninguno)';
+  const projList = Object.values(projects).map(p=>`- ${p.name} (${p.type}, id:${p.id})`).join('\n') || '(ninguno)';
   const now = new Date();
-  const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  const todayS = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
   const weekday = now.toLocaleDateString('es-AR',{weekday:'long'});
-  const prompt = `Sos un asistente de productividad. El usuario dice: "${input}"\n\nProyectos existentes:\n${projList}\n\nHoy es ${todayStr} (${weekday}). Hora actual: ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}.\n\nDeterminá si el usuario quiere:\n1. Agregar una TAREA → action:"add_task"\n2. Programar un MENSAJE (whatsapp o gmail) → action:"add_message"\n3. Ambos → action:"both"\n\nRespondé SOLO con JSON válido sin markdown ni backticks:\n{"action":"add_task|add_message|both","task":{"name":"...","projectId":"id o null","projectName":"nuevo nombre o null","projectType":"trabajo|personal","date":"YYYY-MM-DD o null","priority":"normal|alta|baja"},"message":{"type":"whatsapp|gmail","to":"email o null","phone":"+549... o null","subject":"asunto o null","body":"texto listo para enviar","when":"YYYY-MM-DDTHH:MM en hora local Argentina","note":"contexto o null"},"summary":"frase breve en español"}\n\nReglas: si no aplica algún campo usá null. Calculá fechas relativas desde hoy. El body del whatsapp debe ser el mensaje completo listo para copiar y pegar.`;
+
+  const prompt = `Sos un asistente de productividad. El usuario dice: "${input}"\n\nProyectos existentes:\n${projList}\n\nHoy es ${todayS} (${weekday}). Hora actual: ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}.\n\nDeterminá si el usuario quiere:\n1. Agregar una TAREA → action:"add_task"\n2. Programar un MENSAJE → action:"add_message"\n3. Ambos → action:"both"\n\nSi el usuario menciona un día/hora específico para un mensaje, calculá la fecha. Si NO menciona hora específica, dejá when como null para que el usuario la elija.\n\nRespondé SOLO con JSON válido sin markdown:\n{"action":"add_task|add_message|both","task":{"name":"...","projectId":"id o null","projectName":"nuevo o null","projectType":"trabajo|personal","date":"YYYY-MM-DD o null","priority":"normal|alta|baja"},"message":{"type":"whatsapp|gmail","to":null,"phone":null,"subject":null,"body":"texto listo","when":"YYYY-MM-DDTHH:MM o null","note":null},"summary":"frase breve en español","needsDateTime":true|false}\n\nneedsDateTime debe ser true si el usuario quiere programar un mensaje pero no especificó hora exacta.`;
 
   try {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method:'POST',
-      headers:{ 'Content-Type':'application/json', 'x-api-key': cfg.apiKey, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      headers:{'Content-Type':'application/json','x-api-key':cfg.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:600,messages:[{role:'user',content:prompt}]})
     });
     const data = await r.json();
-    if (data.error) { console.error('Anthropic error:', JSON.stringify(data.error)); throw new Error(data.error.message+' | type: '+data.error.type); }
+    if(data.error) throw new Error(data.error.message);
     const text = data.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim();
     const p = JSON.parse(text);
 
-    if ((p.action==='add_task'||p.action==='both') && p.task?.name) {
+    // Guardar tarea si aplica
+    if((p.action==='add_task'||p.action==='both') && p.task?.name) {
       let pid = p.task.projectId;
-      if (!pid && p.task.projectName) { const np={id:uid(),name:p.task.projectName,type:p.task.projectType||'trabajo',desc:''}; state.projects.push(np); pid=np.id; }
-      state.tasks.push({id:uid(),name:p.task.name,projectId:pid||null,date:p.task.date||'',priority:p.task.priority||'normal',done:false});
-    }
-    if ((p.action==='add_message'||p.action==='both') && p.message?.body) {
-      const m={id:uid(),type:p.message.type||'whatsapp',body:p.message.body,when:p.message.when||nowLocalStr(),note:p.message.note||'',sent:false};
-      if (p.message.type==='gmail'){m.to=p.message.to||'';m.subject=p.message.subject||'';}
-      else{m.phone=p.message.phone||'';}
-      state.messages.push(m);
+      if(!pid && p.task.projectName) { const np={id:uid(),name:p.task.projectName,type:p.task.projectType||'trabajo',desc:'',createdAt:new Date().toISOString(),history:[]}; await saveProject(np); pid=np.id; }
+      await saveTask({id:uid(),name:p.task.name,projectId:pid||null,date:p.task.date||'',alertTime:'',priority:p.task.priority||'normal',done:false,createdAt:new Date().toISOString(),history:[]});
     }
 
-    res.className='ai-result show'; res.textContent=p.summary||'Listo.';
-    document.getElementById('ai-input').value='';
-    save(); render();
+    // Si necesita fecha/hora mostrar picker
+    if((p.action==='add_message'||p.action==='both') && p.message?.body) {
+      if(p.needsDateTime || !p.message.when) {
+        pendingAIResult = p;
+        res.className='ai-result show'; res.textContent=p.summary+' — Elegí cuándo enviarlo:';
+        showDateTimePicker(p.message);
+      } else {
+        await commitMessage(p.message);
+        res.className='ai-result show'; res.textContent=p.summary||'Listo.';
+        document.getElementById('ai-input').value='';
+      }
+    } else {
+      res.className='ai-result show'; res.textContent=p.summary||'Listo.';
+      document.getElementById('ai-input').value='';
+    }
   } catch(e) {
     res.className='ai-result err show';
-    res.textContent = e.message?.includes('401') ? 'API key inválida. Revisá la configuración.' : 'Error al conectar. Verificá tu conexión e intentá de nuevo.';
+    res.textContent = e.message?.includes('401') ? 'API key inválida.' : 'Error al conectar. Verificá tu conexión.';
   }
-  btn.disabled=false;
-  btn.innerHTML='<svg viewBox="0 0 24 24" fill="white"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>';
+  btn.disabled=false; btn.innerHTML='<svg viewBox="0 0 24 24" fill="white"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>';
 }
 
-// Enter en inputs de modales
-document.addEventListener('DOMContentLoaded', ()=>{
-  document.getElementById('f-name').addEventListener('keydown', e=>{ if(e.key==='Enter') saveProject(); });
-  document.getElementById('t-name').addEventListener('keydown', e=>{ if(e.key==='Enter') saveTask(); });
-  document.getElementById('cfg-key-input').addEventListener('keydown', e=>{ if(e.key==='Enter') saveApiKey(); });
-});
+async function commitMessage(msgData, when) {
+  const m = { id:uid(), type:msgData.type||'whatsapp', body:msgData.body, when:when||msgData.when||nowLocalStr(), note:msgData.note||'', sent:false };
+  if(msgData.type==='gmail'){m.to=msgData.to||'';m.subject=msgData.subject||'';}
+  else{m.phone=msgData.phone||'';}
+  await saveMessage(m);
+}
 
-// Cerrar modal al tocar el fondo
+// ── DATE/TIME PICKER ─────────────────────────────────────────────
+let pickerSelected = { dayOffset: null, hour: null };
+
+function showDateTimePicker(msgData) {
+  pickerSelected = { dayOffset: null, hour: null };
+  const picker = document.getElementById('dt-picker');
+  const now = new Date();
+  const days = [];
+  for(let i=0;i<7;i++) {
+    const d = new Date(now); d.setDate(d.getDate()+i);
+    const label = i===0?'Hoy':i===1?'Mañana':d.toLocaleDateString('es-AR',{weekday:'short',day:'2-digit',month:'2-digit'});
+    days.push({offset:i,label,d});
+  }
+  const hours = [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
+
+  picker.innerHTML = `<div class="dt-picker-title">¿Cuándo querés que aparezca el recordatorio?</div>
+    <div class="dt-row" id="dt-days">${days.map(d=>`<button class="dt-day-btn" data-offset="${d.offset}" onclick="selectDay(${d.offset})">${d.label}</button>`).join('')}</div>
+    <div class="dt-time-row">
+      <span class="dt-time-label">Hora:</span>
+      <div id="dt-hours" style="display:flex;gap:6px;flex-wrap:wrap">${hours.map(h=>`<button class="dt-hour-btn" data-hour="${h}" onclick="selectHour(${h})">${String(h).padStart(2,'0')}</button>`).join('')}</div>
+    </div>
+    <button class="dt-confirm" onclick="confirmDateTime()">Confirmar</button>`;
+  picker.classList.add('show');
+}
+
+window.selectDay = function(offset) {
+  pickerSelected.dayOffset = offset;
+  document.querySelectorAll('.dt-day-btn').forEach(b => b.classList.toggle('sel', parseInt(b.dataset.offset)===offset));
+}
+window.selectHour = function(h) {
+  pickerSelected.hour = h;
+  document.querySelectorAll('.dt-hour-btn').forEach(b => b.classList.toggle('sel', parseInt(b.dataset.hour)===h));
+}
+window.confirmDateTime = async function() {
+  if(pickerSelected.dayOffset===null || pickerSelected.hour===null) { alert('Elegí día y hora.'); return; }
+  if(!pendingAIResult) return;
+  const d = new Date(); d.setDate(d.getDate()+pickerSelected.dayOffset);
+  d.setHours(pickerSelected.hour,0,0,0);
+  const pad = n=>String(n).padStart(2,'0');
+  const when = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  await commitMessage(pendingAIResult.message, when);
+  document.getElementById('dt-picker').classList.remove('show');
+  document.getElementById('ai-result').textContent = 'Mensaje programado para ' + fmtDT(when);
+  document.getElementById('ai-input').value='';
+  pendingAIResult = null; pickerSelected = { dayOffset:null, hour:null };
+}
+
+// ── MODAL BACKDROP ───────────────────────────────────────────────
 document.querySelectorAll('.modal-bg').forEach(bg => {
   bg.addEventListener('click', e => { if(e.target===bg) bg.classList.remove('open'); });
 });
 
-load();
+// ── ENTER EN INPUTS ──────────────────────────────────────────────
+document.getElementById('f-name').addEventListener('keydown', e=>{ if(e.key==='Enter') saveProject(); });
+document.getElementById('t-name').addEventListener('keydown', e=>{ if(e.key==='Enter') saveTask(); });
+document.getElementById('cfg-key-input').addEventListener('keydown', e=>{ if(e.key==='Enter') saveApiKey(); });
+
+// ── INIT ──────────────────────────────────────────────────────────
+startClock();
+checkInterval = setInterval(checkDue, 10000);
+checkDue();
+
 </script>
 </body>
 </html>
