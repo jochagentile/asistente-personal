@@ -704,7 +704,7 @@ async function processAI() {
       body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:600,messages:[{role:'user',content:prompt}]})
     });
     const data = await r.json();
-    if (data.error) throw new Error(data.error.message);
+    if (data.error) { console.error('Anthropic error:', JSON.stringify(data.error)); throw new Error(data.error.message+' | type: '+data.error.type); }
     const text = data.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim();
     const p = JSON.parse(text);
 
