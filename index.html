@@ -220,6 +220,14 @@ html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'DM Sans'
 .rem-dismiss,.rem-snooze{flex:1;padding:12px;border-radius:var(--r);font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;border:.5px solid var(--border2);background:transparent;color:var(--text2)}
 .rem-snooze{color:var(--amber);border-color:rgba(240,160,48,.3)}
 
+
+/* MIC BUTTON */
+.mic-btn{width:44px;height:44px;border-radius:var(--r);background:var(--bg3);border:.5px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.mic-btn:active{transform:scale(.95)}
+.mic-btn.listening{background:var(--red);border-color:var(--red);animation:mic-pulse 1s infinite}
+@keyframes mic-pulse{0%,100%{box-shadow:0 0 0 0 rgba(240,96,96,.4)}50%{box-shadow:0 0 0 8px rgba(240,96,96,0)}}
+.mic-btn svg{width:18px;height:18px}
+
 /* SPINNER */
 .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -547,6 +555,12 @@ function render() {
     <div class="ai-label">Agregar con lenguaje natural</div>
     <div class="ai-row">
       <textarea class="ai-textarea" id="ai-input" placeholder='Ej: "WhatsApp a Gustavo el viernes a las 9: Confirmar reunión" · "Llamar a UYEE el jueves — llaves"'></textarea>
+      <button class="mic-btn" id="mic-btn" onclick="toggleMic()" title="Hablar">
+        <svg id="mic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)">
+          <rect x="9" y="2" width="6" height="11" rx="3"/>
+          <path d="M19 10a7 7 0 01-14 0M12 19v3M8 22h8"/>
+        </svg>
+      </button>
       <button class="ai-send" id="ai-btn" onclick="processAI()"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg></button>
     </div>
     <div class="ai-result" id="ai-result"></div>
@@ -1057,6 +1071,79 @@ document.querySelectorAll('.modal-bg').forEach(bg => {
 document.getElementById('f-name').addEventListener('keydown', e=>{ if(e.key==='Enter') saveProject(); });
 document.getElementById('t-name').addEventListener('keydown', e=>{ if(e.key==='Enter') saveTask(); });
 document.getElementById('cfg-key-input').addEventListener('keydown', e=>{ if(e.key==='Enter') saveApiKey(); });
+
+
+// ── VOICE INPUT ───────────────────────────────────────────────────
+let recognition = null;
+let isListening = false;
+
+window.toggleMic = function() {
+  if(!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    alert('Tu navegador no soporta reconocimiento de voz. Usá Chrome o Safari.');
+    return;
+  }
+  if(isListening) { stopMic(); return; }
+  startMic();
+}
+
+function startMic() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
+  recognition.lang = 'es-AR';
+  recognition.continuous = false;
+  recognition.interimResults = true;
+
+  const btn = document.getElementById('mic-btn');
+  const input = document.getElementById('ai-input');
+  const res = document.getElementById('ai-result');
+
+  recognition.onstart = () => {
+    isListening = true;
+    btn.classList.add('listening');
+    btn.title = 'Escuchando...';
+    res.className = 'ai-result show';
+    res.style.color = 'var(--amber)';
+    res.textContent = 'Escuchando... hablá ahora';
+  };
+
+  recognition.onresult = (e) => {
+    const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
+    input.value = transcript;
+    if(e.results[e.results.length-1].isFinal) {
+      res.textContent = 'Entendido: "' + transcript + '"';
+      res.style.color = 'var(--green)';
+    }
+  };
+
+  recognition.onerror = (e) => {
+    stopMic();
+    const msgs = { 'no-speech':'No detecté audio. Intentá de nuevo.', 'not-allowed':'Permiso de micrófono denegado. Habilitalo en la configuración del navegador.', 'network':'Error de red.' };
+    const res2 = document.getElementById('ai-result');
+    res2.className = 'ai-result err show';
+    res2.style.color = '';
+    res2.textContent = msgs[e.error] || 'Error al escuchar: ' + e.error;
+  };
+
+  recognition.onend = () => {
+    stopMic();
+    const input2 = document.getElementById('ai-input');
+    const res2 = document.getElementById('ai-result');
+    res2.style.color = '';
+    if(input2.value.trim()) {
+      res2.className = 'ai-result show';
+      res2.textContent = 'Listo. Revisá el texto y apretá enviar, o hablá de nuevo.';
+    }
+  };
+
+  recognition.start();
+}
+
+function stopMic() {
+  isListening = false;
+  const btn = document.getElementById('mic-btn');
+  if(btn) { btn.classList.remove('listening'); btn.title = 'Hablar'; }
+  if(recognition) { try { recognition.stop(); } catch(e) {} recognition = null; }
+}
 
 // ── INIT ──────────────────────────────────────────────────────────
 startClock();
